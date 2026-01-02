@@ -25,17 +25,6 @@ export function CityTemperatureClient({ citiesData }: CityTemperatureClientProps
   const [searchTerm, setSearchTerm] = useState("");
   const [unit, setUnit] = useState<"C" | "F">("C");
 
-  const continents = useMemo(() => {
-    const grouped: Record<string, CityData[]> = {};
-    citiesData.forEach((city) => {
-      if (!grouped[city.continent]) {
-        grouped[city.continent] = [];
-      }
-      grouped[city.continent].push(city);
-    });
-    return grouped;
-  }, [citiesData]);
-
   const filteredCities = useMemo(() => {
     if (!searchTerm) return citiesData;
     const term = searchTerm.toLowerCase();

@@ -116,7 +116,7 @@ export function TemperatureChart({ cities, unit, onUnitChange }: TemperatureChar
               tickMargin={4}
               tickFormatter={(value) => `${value}°`}
               tick={{ fontSize: 11 }}
-              width={40}
+              width={50}
             />
             <Tooltip
               contentStyle={{
@@ -125,7 +125,7 @@ export function TemperatureChart({ cities, unit, onUnitChange }: TemperatureChar
                 borderRadius: "8px",
                 fontSize: "12px",
               }}
-              formatter={(value: number) => [`${value}°${unit}`, ""]}
+              formatter={(value) => [`${value}°${unit}`, ""]}
             />
             <Legend
               wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }}
