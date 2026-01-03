@@ -7,10 +7,14 @@ export default async function Home() {
 
   // Prepare data for client component
   const citiesData = temperatures.map((city) => ({
+    id: city.id,
     continent: city.continent,
     country: city.country,
     city: city.city,
     year: city.year,
+    lat: city.lat,
+    lng: city.lng,
+    population: city.population,
     data: getMonthlyData(city),
   }));
 
@@ -18,11 +22,11 @@ export default async function Home() {
     <main className="p-4 sm:p-8">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-2xl font-bold mb-2 flex items-center gap-2">
-          <img src="/logo.svg" alt="Thermometer" className="h-8 w-8" />
-          City Temperatures
+          <img src="/logo.svg" alt="Cities" className="h-10 w-10" />
+          Cities
         </h1>
         <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8">
-          Compare monthly temperature data for cities around the world
+          Compare temperature, population, and location data for cities around the world
         </p>
         <CityTemperatureClient citiesData={citiesData} />
 

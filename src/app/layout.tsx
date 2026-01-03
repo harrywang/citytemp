@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "City Temperatures",
-  description: "Visualize city temperature data around the world",
+  title: "Cities",
+  description: "Compare temperature, population, and location data for cities around the world",
 };
 
 export default function RootLayout({

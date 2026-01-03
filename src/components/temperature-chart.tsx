@@ -34,6 +34,11 @@ const COLORS = [
   "#264653",
   "#e9c46a",
   "#f4a261",
+  "#8b5cf6",
+  "#ec4899",
+  "#06b6d4",
+  "#84cc16",
+  "#f97316",
 ];
 
 export function TemperatureChart({ cities, unit, onUnitChange }: TemperatureChartProps) {

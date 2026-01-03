@@ -2,12 +2,18 @@
 
 import { useState, useMemo } from "react";
 import { TemperatureChart } from "./temperature-chart";
+import { PopulationChart } from "./population-chart";
+import { LocationChart } from "./location-chart";
 
 interface CityData {
+  id: string;
   continent: string;
   country: string;
   city: string;
   year: number;
+  lat: number;
+  lng: number;
+  population: number;
   data: { month: string; temp: number }[];
 }
 
@@ -21,9 +27,11 @@ export function CityTemperatureClient({ citiesData }: CityTemperatureClientProps
     "Shanghai",
     "Paris",
     "Sydney",
+    "Bogotá",
   ]);
   const [searchTerm, setSearchTerm] = useState("");
   const [unit, setUnit] = useState<"C" | "F">("C");
+  const [activeTab, setActiveTab] = useState<"temperature" | "population" | "location">("temperature");
 
   const filteredCities = useMemo(() => {
     if (!searchTerm) return citiesData;
@@ -36,11 +44,16 @@ export function CityTemperatureClient({ citiesData }: CityTemperatureClientProps
   }, [citiesData, searchTerm]);
 
   const selectedCitiesData = useMemo(() => {
-    return citiesData
-      .filter((c) => selectedCities.includes(c.city))
+    return selectedCities
+      .map((cityName) => citiesData.find((c) => c.city === cityName))
+      .filter((c): c is NonNullable<typeof c> => c !== undefined)
       .map((c) => ({
+        id: c.id,
         city: c.city,
         country: c.country,
+        lat: c.lat,
+        lng: c.lng,
+        population: c.population,
         data: c.data,
       }));
   }, [citiesData, selectedCities]);
@@ -50,7 +63,7 @@ export function CityTemperatureClient({ citiesData }: CityTemperatureClientProps
       if (prev.includes(cityName)) {
         return prev.filter((c) => c !== cityName);
       }
-      if (prev.length >= 5) {
+      if (prev.length >= 10) {
         return prev;
       }
       return [...prev, cityName];
@@ -65,7 +78,7 @@ export function CityTemperatureClient({ citiesData }: CityTemperatureClientProps
           <h2 className="text-sm sm:text-base font-medium text-muted-foreground">Add Cities</h2>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setSelectedCities(["New York", "Shanghai", "Paris", "Sydney"])}
+              onClick={() => setSelectedCities(["New York", "Shanghai", "Paris", "Sydney", "Bogotá"])}
               className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               Sample
@@ -79,7 +92,7 @@ export function CityTemperatureClient({ citiesData }: CityTemperatureClientProps
               </button>
             )}
             <span className="text-xs sm:text-sm text-muted-foreground">
-              {selectedCities.length}/5 selected
+              {selectedCities.length}/10 selected
             </span>
           </div>
         </div>
@@ -101,7 +114,7 @@ export function CityTemperatureClient({ citiesData }: CityTemperatureClientProps
           <input
             type="text"
             placeholder={
-              selectedCities.length >= 5
+              selectedCities.length >= 10
                 ? "Remove a city to add more"
                 : selectedCities.length === 0
                 ? "Search cities..."
@@ -109,12 +122,12 @@ export function CityTemperatureClient({ citiesData }: CityTemperatureClientProps
             }
             value={searchTerm}
             onChange={(e) => {
-              if (selectedCities.length < 5) {
+              if (selectedCities.length < 10) {
                 setSearchTerm(e.target.value);
               }
             }}
-            disabled={selectedCities.length >= 5}
-            className="flex-1 min-w-[120px] outline-none bg-transparent text-sm disabled:cursor-not-allowed disabled:text-muted-foreground"
+            disabled={selectedCities.length >= 10}
+            className="flex-1 min-w-[120px] outline-none bg-transparent text-base disabled:cursor-not-allowed disabled:text-muted-foreground"
           />
         </div>
 
@@ -123,13 +136,13 @@ export function CityTemperatureClient({ citiesData }: CityTemperatureClientProps
           <div className="border rounded-md p-2 space-y-1 max-h-48 overflow-y-auto">
             {filteredCities.slice(0, 10).map((city) => (
               <button
-                key={`${city.city}-${city.country}`}
+                key={city.id}
                 onClick={() => {
                   toggleCity(city.city);
                   setSearchTerm("");
                 }}
                 disabled={
-                  selectedCities.length >= 5 && !selectedCities.includes(city.city)
+                  selectedCities.length >= 10 && !selectedCities.includes(city.city)
                 }
                 className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
                   selectedCities.includes(city.city)
@@ -152,12 +165,59 @@ export function CityTemperatureClient({ citiesData }: CityTemperatureClientProps
         )}
       </div>
 
-      {/* Chart */}
+      {/* Charts */}
       {selectedCitiesData.length > 0 ? (
-        <TemperatureChart cities={selectedCitiesData} unit={unit} onUnitChange={setUnit} />
+        <div className="space-y-4">
+          {/* Tabs */}
+          <div className="flex gap-1 border-b">
+            <button
+              onClick={() => setActiveTab("temperature")}
+              className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
+                activeTab === "temperature"
+                  ? "border-primary text-primary"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Temperature
+            </button>
+            <button
+              onClick={() => setActiveTab("population")}
+              className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
+                activeTab === "population"
+                  ? "border-primary text-primary"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Population
+            </button>
+            <button
+              onClick={() => setActiveTab("location")}
+              className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
+                activeTab === "location"
+                  ? "border-primary text-primary"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Location
+            </button>
+          </div>
+
+          {/* Tab Content */}
+          <div className="pt-2">
+            {activeTab === "temperature" && (
+              <TemperatureChart cities={selectedCitiesData} unit={unit} onUnitChange={setUnit} />
+            )}
+            {activeTab === "population" && (
+              <PopulationChart cities={selectedCitiesData} />
+            )}
+            {activeTab === "location" && (
+              <LocationChart cities={selectedCitiesData} />
+            )}
+          </div>
+        </div>
       ) : (
         <div className="text-center py-12 text-muted-foreground">
-          Select at least one city to view temperature data
+          Select at least one city to view data
         </div>
       )}
     </div>
