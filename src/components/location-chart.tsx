@@ -108,22 +108,16 @@ export function LocationChart({ cities }: LocationChartProps) {
             <ReferenceLine y={0} stroke="#9ca3af" strokeDasharray="3 3" />
             <ReferenceLine x={0} stroke="#9ca3af" strokeDasharray="3 3" />
             <Tooltip
-              contentStyle={{
-                backgroundColor: "#fff",
-                border: "1px solid #e5e7eb",
-                borderRadius: "8px",
-                fontSize: "12px",
-              }}
-              formatter={(value, name) => {
-                const label = name === "y" ? "Latitude" : "Longitude";
-                return [value, label];
-              }}
-              labelFormatter={(_, payload) => {
-                if (payload && payload[0]) {
-                  const data = payload[0].payload;
-                  return `${data.name}, ${data.country}`;
-                }
-                return "";
+              content={({ active, payload }) => {
+                if (!active || !payload?.length) return null;
+                const data = payload[0].payload;
+                return (
+                  <div className="bg-white border border-gray-200 rounded-lg p-2 text-xs">
+                    <div className="font-medium mb-1">{data.name}, {data.country}</div>
+                    <div>Latitude: {data.y}</div>
+                    <div>Longitude: {data.x}</div>
+                  </div>
+                );
               }}
             />
             <Scatter data={chartData}>
