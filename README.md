@@ -33,7 +33,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - Temperature data: [Wikipedia: List of cities by average temperature](https://en.wikipedia.org/wiki/List_of_cities_by_average_temperature)
 - City data: [Kaggle: World Cities](https://www.kaggle.com/datasets/harrywang/world-cities)
 - Data merged via fuzzy matching using [Manus](https://manus.im/share/H4wHvuyeEkaSe2a0hGfgbo)
-- Logo: [SVG Repo](https://www.svgrepo.com/vectors/city/multicolor/6)
+- Logo: [SVG Repo](https://www.svgrepo.com/svg/315007/place)
 
 ## License
 
