@@ -15,6 +15,17 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Cities",
   description: "Compare temperature, population, and location data for cities around the world",
+  openGraph: {
+    title: "Cities",
+    description: "Compare temperature, population, and location data for cities around the world",
+    images: ["/og-image.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cities",
+    description: "Compare temperature, population, and location data for cities around the world",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({
