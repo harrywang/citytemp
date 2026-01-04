@@ -114,6 +114,7 @@ export function TemperatureChart({ cities, unit, onUnitChange }: TemperatureChar
               axisLine={false}
               tickMargin={8}
               tick={{ fontSize: 11 }}
+              interval={0}
             />
             <YAxis
               tickLine={false}
